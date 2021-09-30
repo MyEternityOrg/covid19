@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load l10n %}
+
+{% block title %}
+    {% localize on %}
+        Опрос Covid {{ enterprise }}
+    {% endlocalize %}
+{% endblock %}
+
+
+{% block content %}
+
+    <form action="" method="post">
+        {% csrf_token %}
+
+        <table id="datatable" class="table table-bordered table-hover">
+            <thead class="thead-light">
+            <tr>
+                <th>Сотрудник</th>
+                <th>Привит</th>
+                <th>Противопоказания (мед)</th>
+                <th>QR-код</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for rowdata in list_obj %}
+                <tr>
+                    <td>{{ rowdata.person_guid }}</td>
+{#                    <td><input type="checkbox" name='vaccinated{{ forloop.counter0 }}'></td>#}
+                    <td><select name='vaccinated{{ forloop.counter0 }}'>
+                        <option value="--------" selected> ------ </option>
+                        <option value=true> да </option>
+                        <option value=false> нет </option>
+                    </select></td>
+{#                    <td><input type="checkbox" name='contraindications{{ forloop.counter0 }}' value=on></td>#}
+                    <td><select name='contraindications{{ forloop.counter0 }}'>
+                        <option value="--------" selected> ------ </option>
+                        <option value=true> да </option>
+                        <option value=false> нет </option>
+                    </select></td>
+                    <td><select name='having_qr_code{{ forloop.counter0 }}'>
+                        <option value=true> да </option>
+                        <option value=false selected> нет </option>
+                    </select></td>
+                    <td style="display:none;"><input type="text" name="person_guid{{ forloop.counter0 }}"
+                                                     value={{ rowdata.person_guid.guid }}></td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+
+            <ol class="breadcrumb float-sm-right">
+                <li>
+                    <input type="submit" class="btn btn-success" value="Сохранить" name="close_save">
+                </li>
+            </ol>
+        </table>
+
+        <input type="hidden" name="len_list" value={{ len_list }}>
+        <input type="hidden" name="enterprise" value={{ enterprise.guid }}>
+    </form>
+
+    {% block morejs %}
+        <script>
+
+
+        </script>
+
+    {% endblock morejs %}
+
+{% endblock %}
